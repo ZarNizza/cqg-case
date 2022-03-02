@@ -1,0 +1,29 @@
+.rb {
+  display: flex;
+  height: 3rem;
+  width: 5rem;
+  border: 1px solid orangered;
+  border-radius: 0.2rem;
+  margin: 5px;
+}
+.rb:hover {
+  background-color: orange;
+}
+
+.inputLabel {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.chk:checked ~ div {
+  background-color: yellowgreen;
+  transition: 0.25s ease;
+}
+.chk:checked ~ div:hover {
+  background-color: palegreen;
+  transition: 0.25s ease;
+}

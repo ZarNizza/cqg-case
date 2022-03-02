@@ -1,8 +1,10 @@
+import { DetailedHTMLProps, InputHTMLAttributes } from "react";
 import styles from "./CheckBtn.module.scss";
 
 type Props = {
   text: string;
   checked: boolean;
+  onClick: any;
 };
 
 export function CheckBtn(props: Props) {
@@ -11,6 +13,7 @@ export function CheckBtn(props: Props) {
       <input
         type="checkbox"
         onChange={() => {}}
+        onClick={props.onClick}
         className={styles.chk}
         hidden
         checked={props.checked}

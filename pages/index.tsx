@@ -52,9 +52,9 @@ const Home = () => {
     socket.emit("emitFlag", "ServEmitFlag");
   };
 
-  const awpHandler = () => {
+  function awpHandler() {
     setAwpFlag(() => !awpFlag);
-  };
+  }
 
   const Tabloid = (props) => {
     console.log("props.data=", props.data);
@@ -62,7 +62,7 @@ const Home = () => {
       <div className={styles.tabloid}>
         <h3>TabData:</h3>
         <div className={styles.right}>
-          <CheckBtn text="Style" checked={awpFlag} />
+          <CheckBtn text="Style" checked={awpFlag} onClick={awpHandler} />
         </div>
 
         <ul>

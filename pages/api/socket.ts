@@ -60,8 +60,9 @@ const c: [string, string, number][] = [
 
 function genPool() {
   let arr: Contract[] = [];
-  const j = Math.round(3 * Math.random()) + 1;
+  let j = Math.round(3 * Math.random()) + 1;
   while (j) {
+    j--;
     const k = Math.round(10 * Math.random());
     console.log("generate k=", k);
 
@@ -88,13 +89,13 @@ const SocketHandler = (req, res) => {
     io.on("connection", (socket) => {
       socket.on("emitFlag", () => {
         let i = 2;
-        // while (i) {
-        //   let msg = JSON.stringify(genPool());
-        //   console.log("socket.emit = ", msg);
-        //   socket.emit("dataFlow", msg);
-        //   setTimeout(() => console.log, 1000);
-        //   i--;
-        // }
+        while (i) {
+          i--;
+          let msg = JSON.stringify(genPool());
+          console.log("socket.emit = ", msg);
+          socket.emit("dataFlow", msg);
+          setTimeout(() => console.log, 1000);
+        }
       });
     });
   }

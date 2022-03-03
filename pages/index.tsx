@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
 import { CheckBtn } from "../components/CheckBtn";
-import io, { Socket } from "Socket.IO-client";
-import { DefaultEventsMap } from "@socket.io/component-emitter";
 
 export type ContractList = {
   id: string;
@@ -19,65 +17,78 @@ export type Contract = {
   awp?: number;
 };
 
-let socket: Socket<DefaultEventsMap, DefaultEventsMap>;
+const conList: ContractList[] = [
+  { id: "i-A", name: "AAAA", removed: false },
+  { id: "i-B", name: "BBBB", removed: false },
+  { id: "i-C", name: "CCCC", removed: false },
+  { id: "i-D", name: "DDDD", removed: true },
+  { id: "i-E", name: "EEEE", removed: false },
+];
+
+const c: [string, string, number][] = [
+  ["i-A", "AAAA", 1.1],
+  ["i-B", "BBBB", 2.2],
+  ["i-C", "CCCC", 3.3],
+  ["i-D", "DDDD", 4.4],
+  ["i-E", "EEEE", 5.5],
+  ["i-F", "FFFF", 6.6],
+  ["i-G", "GGGG", 7.7],
+  ["i-H", "HHHH", 8.8],
+  ["i-I", "IIII", 9.9],
+  ["i-J", "JJJJ", 10.1],
+  ["i-K", "KKKK", 11.1],
+];
+
+function getData() {
+  let arr: Contract[] = [];
+  let j = Math.round(5 * Math.random()) + 1;
+  while (j) {
+    const k = Math.round(10 * Math.random());
+    arr.push({
+      contractId: c[k][0],
+      quote: {
+        price: c[k][2] + 0.5 - Math.random(),
+        volume: Math.round(100000 * Math.random()),
+      },
+    });
+    j--;
+  }
+  return arr;
+}
 
 const Home = () => {
-  const ContractList0: ContractList = { id: "", name: "", removed: true };
-  const Contract0: Contract = {
-    contractId: "i-i",
-    quote: { price: 0.101, volume: 1234 },
-  };
   const [conList, setConList] = useState<ContractList[] | []>([]);
-  const [ServEmitFlag, setServEmitFlag] = useState(false);
+  const [flowFlag, setFlowFlag] = useState(false);
   const [awpFlag, setAwpFlag] = useState(true);
-  const [tabData, setTabData] = useState<Contract[] | []>([]);
+  const [tabData, setTabData] = useState<Contract[] | []>([
+    { contractId: "aaa", quote: { price: 123, volume: 456 } },
+  ]);
   console.log("\n\n* * * * initial tabData=", tabData);
-  let tmpTD = [];
 
+  let incomeData: Contract[] | [] = [];
   useEffect(() => {
-    async () => {
-      await fetch("/api/socket").finally(() => {
-        socket = io();
+    incomeData = getData();
+    let interval: any;
 
-        socket.on("connect", () => {
-          console.log("connected");
-        });
+    // useEffect(() => {
+    let tmpTD = [];
 
-        // socket.on("dataList", (msg) => {
-        //   setConList(msg);
-        //   console.log("received conList=", conList);
-        // });
+    tmpTD = Array.from(tabData);
+    console.log("+++++++++ received mData=", incomeData);
 
-        socket.on("dataFlow", (msg) => {
-          const mdata: Contract[] = JSON.parse(msg);
-          // const mdata: Contract[] = msg;
-          tmpTD = Array.from(tabData);
-          console.log("\n......... tabData =", tabData);
-          console.log("\n......... tmp =", tmpTD);
-          console.log("+++++++++ received mData=", mdata);
-
-          mdata.forEach((m) => {
-            const mindex = tmpTD.findIndex(
-              (t) => t.contractId === m.contractId
-            );
-            m.awp = m.quote.price;
-            if (mindex === -1) {
-              tmpTD.push(m);
-            } else {
-              tmpTD[mindex] = m;
-            }
-          });
-          console.log("======== setTabData=", tmpTD);
-          setTabData(() => tmpTD);
-        });
-      });
-    };
+    incomeData.forEach((m) => {
+      const mid = tmpTD.findIndex((t) => t.contractId === m.contractId);
+      m.awp = m.quote.price;
+      if (mid === -1) {
+        tmpTD.push(m);
+      } else {
+        tmpTD[mid] = m;
+      }
+    });
+    console.log("======== setTabData=", tmpTD);
+    setTabData(() => tmpTD);
+    // }, [incomeData]);
   }, []);
-
-  const servHandler = () => {
-    setServEmitFlag(() => !ServEmitFlag);
-    socket.emit("emitFlag", ServEmitFlag);
-  };
 
   const Tabloid = () => {
     console.log("Tabloid - tabData=", tabData);
@@ -85,6 +96,7 @@ const Home = () => {
     return (
       <div className={styles.tabloid}>
         <h3>TabData:</h3>
+
         <div className={styles.right}>
           <CheckBtn
             text="Style"
@@ -113,23 +125,20 @@ const Home = () => {
   return (
     <div>
       <div>
-        <input type="checkbox" onChange={servHandler} checked={ServEmitFlag} />
-        ServEmitFlag
-      </div>
-      {/* {conList.length > 0 ? (
+        {/* {conList.length > 0 ? (
         <ul>
-          {conList.map((i) => (
-            <li key={i.id}>
-              {i.id} - {i.name} - {i.removed}
-            </li>
+        {conList.map((i) => (
+          <li key={i.id}>
+          {i.id} - {i.name} - {i.removed}
+          </li>
           ))}
-        </ul>
-      ) : (
-        ""
-      )} */}
+          </ul>
+          ) : (
+            ""
+          )} */}
+      </div>
       <Tabloid />
     </div>
   );
 };
-
 export default Home;

@@ -22,8 +22,8 @@ type Contract = {
 const Home = () => {
   const ContractList0: ContractList = { id: "", name: "", removed: true };
   const Contract0: Contract = {
-    contractId: "i-A",
-    quote: { price: 0.175, volume: 1550 },
+    contractId: "i-i",
+    quote: { price: 0.101, volume: 1234 },
   };
   const [conList, setConList] = useState<ContractList[]>([ContractList0]);
   const [ServEmitFlag, setServEmitFlag] = useState(false);
@@ -41,9 +41,20 @@ const Home = () => {
     });
 
     socket.on("dataFlow", (msg) => {
-      const r = JSON.parse(msg);
-      console.log("--------- receivedData=", r);
-      setTabData(r);
+      const mdata: Contract[] = JSON.parse(msg);
+      console.log("--------- received mData=", mdata);
+      let tmpTD = Array.from(tabData);
+
+      mdata.forEach((m) => {
+        const mindex = tabData.findIndex((t) => t.contractId === m.contractId);
+        if (mindex === -1) {
+          tmpTD.push(m);
+        } else {
+          tmpTD[mindex] = m;
+        }
+      });
+      console.log("======== setTabData=", tmpTD);
+      setTabData(() => tmpTD);
     });
   };
 
@@ -69,7 +80,7 @@ const Home = () => {
           {props.data.map((c: Contract) => (
             <li key={c.contractId}>
               <span className={styles.row}>
-                <span>{c.quote.volume}</span> <span>{c.quote.price}</span>
+                <span>{c.contractId}</span> <span>{c.quote.price}</span>
               </span>
               <span className={awpFlag ? styles.awp : styles.noAwp}>
                 {c.contractId}%

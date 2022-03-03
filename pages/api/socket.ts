@@ -55,13 +55,16 @@ const c: [string, string, number][] = [
   ["i-H", "HHHH", 8.8],
   ["i-I", "IIII", 9.9],
   ["i-J", "JJJJ", 10.1],
+  ["i-K", "KKKK", 11.1],
 ];
 
 function genPool() {
   let arr: Contract[] = [];
-  const j = Math.round(10 * Math.random()) + 1;
+  const j = Math.round(3 * Math.random()) + 1;
   while (j) {
     const k = Math.round(10 * Math.random());
+    console.log("generate k=", k);
+
     arr.push({
       contractId: c[k][0],
       quote: {
@@ -84,14 +87,14 @@ const SocketHandler = (req, res) => {
 
     io.on("connection", (socket) => {
       socket.on("emitFlag", () => {
-        let i = 10;
-        while (i) {
-          let msg = JSON.stringify(genPool());
-          console.log("socket.emit = ", msg);
-          socket.emit("dataFlow", msg);
-          setTimeout(() => console.log, 1000);
-          i--;
-        }
+        let i = 2;
+        // while (i) {
+        //   let msg = JSON.stringify(genPool());
+        //   console.log("socket.emit = ", msg);
+        //   socket.emit("dataFlow", msg);
+        //   setTimeout(() => console.log, 1000);
+        //   i--;
+        // }
       });
     });
   }

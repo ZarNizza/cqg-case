@@ -59,18 +59,18 @@ const c: [string, string, number][] = [
 
 function genPool() {
   let arr: Contract[] = [];
-  const j = 10 * Math.random() + 1;
+  const j = Math.round(10 * Math.random()) + 1;
   while (j) {
-    const k = 10 * Math.random();
+    const k = Math.round(10 * Math.random());
     arr.push({
       contractId: c[k][0],
       quote: {
         price: c[k][2] + 0.5 - Math.random(),
-        volume: 100000 * Math.random(),
+        volume: Math.round(100000 * Math.random()),
       },
     });
   }
-  return arr
+  return arr;
 }
 
 const SocketHandler = (req, res) => {

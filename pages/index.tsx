@@ -17,6 +17,7 @@ type Contract = {
     price: number;
     volume: number;
   };
+  awp?: number;
 };
 
 const Home = () => {
@@ -47,6 +48,7 @@ const Home = () => {
 
       mdata.forEach((m) => {
         const mindex = tabData.findIndex((t) => t.contractId === m.contractId);
+        m.awp = m.quote.price;
         if (mindex === -1) {
           tmpTD.push(m);
         } else {
@@ -60,7 +62,7 @@ const Home = () => {
 
   const servHandler = () => {
     setServEmitFlag(() => !ServEmitFlag);
-    socket.emit("emitFlag", "ServEmitFlag");
+    socket.emit("emitFlag", ServEmitFlag);
   };
 
   function awpHandler() {
@@ -83,7 +85,7 @@ const Home = () => {
                 <span>{c.contractId}</span> <span>{c.quote.price}</span>
               </span>
               <span className={awpFlag ? styles.awp : styles.noAwp}>
-                {c.contractId}%
+                {c.awp || "-"}%
               </span>
             </li>
           ))}

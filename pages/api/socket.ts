@@ -87,14 +87,14 @@ const SocketHandler = (req, res) => {
     res.socket.server.io = io;
 
     io.on("connection", (socket) => {
-      socket.on("emitFlag", () => {
-        let i = 2;
-        while (i) {
+      socket.on("emitFlag", (f) => {
+        let i = 3;
+        while (f && i) {
           i--;
           let msg = JSON.stringify(genPool());
           console.log("socket.emit = ", msg);
           socket.emit("dataFlow", msg);
-          setTimeout(() => console.log, 1000);
+          setTimeout(() => console.log("...tick...", i, f), 2000);
         }
       });
     });

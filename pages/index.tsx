@@ -40,6 +40,7 @@ const c: [string, string, number][] = [
 ];
 
 function getData() {
+  console.log("--- getData ---");
   let arr: Contract[] = [];
   let j = Math.round(5 * Math.random()) + 1;
   while (j) {
@@ -57,14 +58,14 @@ function getData() {
 }
 
 const Home = () => {
-  const [conList, setConList] = useState<ContractList[] | []>([]);
+  // const [conList, setConList] = useState<ContractList[] | []>([]);
   const [flowFlag, setFlowFlag] = useState(false);
   const [awpFlag, setAwpFlag] = useState(true);
   const [tabData, setTabData] = useState<Contract[] | []>([]);
   const [incomeData, setIncomeData] = useState<Contract[] | []>([]);
-  // let incomeData: Contract[] | [] = [];
 
   useEffect(() => {
+    console.log("!!! useEffect-setTabData");
     let tmpTD = [];
     tmpTD = Array.from(tabData);
     incomeData.forEach((m) => {
@@ -84,7 +85,7 @@ const Home = () => {
   }
 
   function Tabloid(props) {
-    console.log("Tabloid - tabData=", props.d);
+    console.log("*** Tabloid");
     return (
       <div className={styles.tabloid}>
         <h3>TabData:</h3>
@@ -128,7 +129,6 @@ const Home = () => {
     );
   }
 
-  let dataFlow;
   // useEffect(() => {
   //   if (flowFlag) {
   //     dataFlow = setInterval(() => {
@@ -138,11 +138,33 @@ const Home = () => {
   //     clearInterval(dataFlow);
   //   }
   // }, [flowFlag]);
-
+  let eee;
+  let ooo;
   function flowHandler() {
-    setFlowFlag(() => !flowFlag);
-    setIncomeData(getData());
-    return console.log("flowFlag=", flowFlag);
+    if (flowFlag) {
+      clearInterval(eee);
+      clearTimeout(ooo);
+    } else {
+      // eee = setInterval(() => {
+      //   setIncomeData(getData());
+      // }, 500);
+      ooo = setTimeout(function t() {
+        console.log("!!! fHandler - setIncomeData");
+        setIncomeData(getData());
+        ooo = setTimeout(t, 500);
+      }, 500);
+    }
+    console.log("flowFlag-A=", flowFlag);
+    setFlowFlag(!flowFlag);
+    console.log("flowFlag-B=", flowFlag);
+  }
+
+  function flowStopHandler() {
+    clearInterval(eee);
+    clearTimeout(ooo);
+    console.log("flowFlag-S-A=", flowFlag);
+    setFlowFlag(false);
+    console.log("flowFlag-S-B=", flowFlag);
   }
 
   return (
@@ -156,8 +178,25 @@ const Home = () => {
             className={stylesC.chk}
             hidden
             checked={flowFlag}
+            // checked={false}
           />
-          <div className={stylesC.inputLabel}>Data Flow</div>
+          <div className={stylesC.inputLabel}>
+            Get Data {flowFlag ? "ON" : "off"}
+          </div>
+        </label>
+      </div>
+      <div className={styles.left}>
+        <label className={stylesC.rb}>
+          <input
+            type="checkbox"
+            onChange={() => {}}
+            onClick={flowStopHandler}
+            className={stylesC.chk}
+            hidden
+            checked={!flowFlag}
+            // checked={false}
+          />
+          <div className={stylesC.inputLabel}>flow STOP</div>
         </label>
       </div>
       <div>

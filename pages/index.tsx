@@ -63,6 +63,8 @@ const Home = () => {
   const [awpFlag, setAwpFlag] = useState(true);
   const [tabData, setTabData] = useState<Contract[] | []>([]);
   const [incomeData, setIncomeData] = useState<Contract[] | []>([]);
+  const [statData, setStatData] = useState<Contract[] | []>([]);
+  const [statPV, setStatPV] = useState<number[]>([0, 0]);
 
   useEffect(() => {
     console.log("!!! useEffect-setTabData");
@@ -194,23 +196,23 @@ const Home = () => {
             className={stylesC.chk}
             hidden
             checked={!flowFlag}
-            // checked={false}
           />
           <div className={stylesC.inputLabel}>flow STOP</div>
         </label>
       </div>
-      <div>
-        {/* {conList.length > 0 ? (
-        <ul>
-        {conList.map((i) => (
-          <li key={i.id}>
-          {i.id} - {i.name} - {i.removed}
-          </li>
-          ))}
+      <div className={styles.tabloid}>
+        <p>Contracts List</p>
+        {conList.length > 0 ? (
+          <ul>
+            {conList.map((i) => (
+              <li key={i.id}>
+                {i.id} - {i.name} - {i.removed}
+              </li>
+            ))}
           </ul>
-          ) : (
-            ""
-          )} */}
+        ) : (
+          ""
+        )}
       </div>
       <Tabloid d={tabData} />
     </div>

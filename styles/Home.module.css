@@ -17,6 +17,12 @@
   justify-content: flex-end;
   min-width: 100%;
 }
+.left {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  min-width: 100%;
+}
 
 .tabloid {
   display: flex;

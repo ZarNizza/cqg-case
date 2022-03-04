@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import styles from "../styles/Home.module.css";
-import { CheckBtn } from "../components/CheckBtn";
+import stylesC from "../components/CheckBtn.module.scss";
 
 export type ContractList = {
   id: string;
@@ -60,22 +60,13 @@ const Home = () => {
   const [conList, setConList] = useState<ContractList[] | []>([]);
   const [flowFlag, setFlowFlag] = useState(false);
   const [awpFlag, setAwpFlag] = useState(true);
-  const [tabData, setTabData] = useState<Contract[] | []>([
-    { contractId: "aaa", quote: { price: 123, volume: 456 } },
-  ]);
-  console.log("\n\n* * * * initial tabData=", tabData);
+  const [tabData, setTabData] = useState<Contract[] | []>([]);
+  const [incomeData, setIncomeData] = useState<Contract[] | []>([]);
+  // let incomeData: Contract[] | [] = [];
 
-  let incomeData: Contract[] | [] = [];
   useEffect(() => {
-    incomeData = getData();
-    let interval: any;
-
-    // useEffect(() => {
     let tmpTD = [];
-
     tmpTD = Array.from(tabData);
-    console.log("+++++++++ received mData=", incomeData);
-
     incomeData.forEach((m) => {
       const mid = tmpTD.findIndex((t) => t.contractId === m.contractId);
       m.awp = m.quote.price;
@@ -85,45 +76,90 @@ const Home = () => {
         tmpTD[mid] = m;
       }
     });
-    console.log("======== setTabData=", tmpTD);
     setTabData(() => tmpTD);
-    // }, [incomeData]);
-  }, []);
+  }, [incomeData]);
 
-  const Tabloid = () => {
-    console.log("Tabloid - tabData=", tabData);
-    if (tabData.length === 0) return <p>No data yet...</p>;
+  function styleHandler() {
+    setAwpFlag(() => !awpFlag);
+  }
+
+  function Tabloid(props) {
+    console.log("Tabloid - tabData=", props.d);
     return (
       <div className={styles.tabloid}>
         <h3>TabData:</h3>
-
-        <div className={styles.right}>
-          <CheckBtn
-            text="Style"
-            checked={awpFlag}
-            onClick={setAwpFlag(() => !awpFlag)}
-          />
-        </div>
-
-        <ul>
-          {tabData.map((c: Contract) => (
-            <li key={c.contractId}>
-              <span className={styles.row}>
-                <span>{c.contractId}</span>{" "}
-                <span>{c.quote.price.toFixed(4)}</span>
-              </span>
-              <span className={awpFlag ? styles.awp : styles.noAwp}>
-                {(c.awp || 0).toFixed(2) || "-"}%
-              </span>
-            </li>
-          ))}
-        </ul>
+        {props.d.length === 0 ? (
+          <p>No data yet...</p>
+        ) : (
+          <>
+            <div className={styles.right}>
+              <label className={stylesC.rb}>
+                <input
+                  type="checkbox"
+                  onChange={() => {}}
+                  onClick={styleHandler}
+                  className={stylesC.chk}
+                  hidden
+                  checked={awpFlag}
+                />
+                <div className={stylesC.inputLabel}>Style</div>
+              </label>
+            </div>
+            <div>
+              <ul>
+                {props.d.map((c: Contract) => {
+                  return (
+                    <li key={Math.random()}>
+                      <span className={styles.row}>
+                        <span>{c.contractId}</span>{" "}
+                        <span>{c.quote.price.toFixed(4)}</span>
+                      </span>
+                      <span className={awpFlag ? styles.awp : styles.noAwp}>
+                        {(c.awp || 0).toFixed(2) || "-"}%
+                      </span>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+          </>
+        )}
       </div>
     );
-  };
+  }
+
+  let dataFlow;
+  // useEffect(() => {
+  //   if (flowFlag) {
+  //     dataFlow = setInterval(() => {
+  //       incomeData = getData();
+  //     }, 2000);
+  //   } else {
+  //     clearInterval(dataFlow);
+  //   }
+  // }, [flowFlag]);
+
+  function flowHandler() {
+    setFlowFlag(() => !flowFlag);
+    setIncomeData(getData());
+    return console.log("flowFlag=", flowFlag);
+  }
 
   return (
     <div>
+      <div className={styles.left}>
+        <label className={stylesC.rb}>
+          <input
+            type="checkbox"
+            onChange={() => {}}
+            onClick={flowHandler}
+            className={stylesC.chk}
+            hidden
+            checked={flowFlag}
+          />
+          <div className={stylesC.inputLabel}>Data Flow</div>
+        </label>
+      </div>
       <div>
         {/* {conList.length > 0 ? (
         <ul>
@@ -137,7 +173,7 @@ const Home = () => {
             ""
           )} */}
       </div>
-      <Tabloid />
+      <Tabloid d={tabData} />
     </div>
   );
 };

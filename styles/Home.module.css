@@ -29,7 +29,7 @@
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
-  max-width: 25rem;
+  max-width: 35rem;
   margin: auto;
   padding: 1rem;
   border: 1px solid orangered;
@@ -46,7 +46,7 @@
 .tabloid li {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   width: 100%;
   margin: 0.2rem 3px;
@@ -56,20 +56,44 @@
   display: flex;
   justify-content: space-between;
   width: 13rem;
-  margin: 0;
+  margin: 0 0.2rem;
   padding: 0.5rem 1rem;
   border: 1px solid orangered;
   border-radius: 0.2rem;
 }
 .awp {
   display: flex;
-  justify-content: center;
-  width: 5rem;
-  margin: 0;
+  justify-content: flex-end;
+  width: 6rem;
+  margin: 0 0.2rem;
   padding: 0.5rem 1rem;
   border: 1px solid orangered;
   border-radius: 0.2rem;
 }
 .noAwp {
   display: none;
+}
+.rb,
+.freeze {
+  display: flex;
+  height: 3rem;
+  width: 5rem;
+  border: 1px solid orangered;
+  border-radius: 0.2rem;
+  margin: 5px;
+}
+.rb:hover {
+  background-color: orange;
+}
+.freeze {
+  background-color: lightskyblue;
+}
+
+.inputLabel {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 0.2rem;
 }
